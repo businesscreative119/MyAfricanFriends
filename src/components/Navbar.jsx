@@ -2,9 +2,11 @@ import { Transition } from "@headlessui/react";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUser } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
 import { MdLanguage } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0
+import LogoutButton from "./LogoutButton";
+import { IoClose } from "react-icons/io5"; // Assuming you are using IoClose for the close icon
 
 const countries = ["EN", "Arabic", "Chinese", "Dutch", "French", "German", "Italian", "Polish", "Portuguese", "Russian", "Spanish", "Turkish"];
 
@@ -12,6 +14,7 @@ const Navbar = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const { isAuthenticated } = useAuth0(); // Destructure isAuthenticated from Auth0
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
   const handleSignInOpen = () => setIsSignInOpen(true);
@@ -36,34 +39,12 @@ const Navbar = () => {
               >
                 <span className="sr-only">Open main menu</span>
                 {!isMenuOpen ? (
-                  <svg
-                    className="block h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h16m-7 6h7"
-                    />
+                  <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
                   </svg>
                 ) : (
-                  <svg
-                    className="block h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                  <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 )}
               </button>
@@ -78,51 +59,42 @@ const Navbar = () => {
               </div>
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex space-x-4">
-                  <Link
-                    to="/"
-                    className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]"
-                  >
+                  <Link to="/" className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]">
                     Overview
                   </Link>
-                  <Link
-                    to="/Discover"
-                    className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]"
-                  >
+                  <Link to="/Discover" className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]">
                     Meetups
                   </Link>
-                  <Link to="/Careers"  className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]" >Careers</Link>
-                  <Link
-                    to="/Help"
-                    className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]"
-                  >
+                  <Link to="/Careers" className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]">
+                    Careers
+                  </Link>
+                  <Link to="/Help" className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]">
                     Help
                   </Link>
-                  <Link
-                    to="/UserDetail"
-                    className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]"
-                  >
-                    UserDetails
+                  <Link to="/UserDetail" className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium hover:text-[#105d5e]">
+                    Community
                   </Link>
                 </div>
               </div>
             </div>
-            <div className=" sm:block sm:ml-6">
-              <div className="flex space-x-4 ">
-                <motion.a
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  href="#"
-                  onClick={handleSignInOpen}
-                  className="text-white px-3 py-2 font-medium flex items-center bg-zinc-900 opacity-32 rounded-full hover:bg-zinc-400 cursor-pointer text-sm text-[.55rem]  lg:text-[.80rem]"
-                >
-                  <FaUser className="mr-1 text-[.60rem]  lg:text-[.70rem]" />
-                  Sign In
-                </motion.a>
-                <div className="flex space-x-4">
-                  <a
+            <div className="sm:block sm:ml-6">
+              <div className="flex space-x-4">
+                {isAuthenticated ? (
+                  <LogoutButton /> // Render Log Out if authenticated
+                ) : (
+                  <motion.a
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     href="#"
-                    className="px-0 py-2 font-medium flex items-center text-zinc-900 opacity-32 rounded-full text-sm cursor-pointer"
+                    onClick={handleSignInOpen}
+                    className="text-white px-3 py-2 font-medium flex items-center bg-zinc-900 opacity-32 rounded-full hover:bg-zinc-400 cursor-pointer text-sm text-[.55rem] lg:text-[.80rem]"
                   >
+                    <FaUser className="mr-1 text-[.60rem] lg:text-[.70rem]" />
+                    Sign In
+                  </motion.a>
+                )}
+                <div className="flex space-x-4">
+                  <a href="#" className="px-0 py-2 font-medium flex items-center text-zinc-900 opacity-32 rounded-full text-sm cursor-pointer">
                     <MdLanguage className="text-xl" />
                     <select
                       id="country"
@@ -131,74 +103,21 @@ const Navbar = () => {
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
                     >
-                      <option
-                        className="mt-12 bg-white border-none"
-                        value=""
-                        disabled
-                      >
+                      <option className="mt-12 bg-white border-none" value="" disabled>
                         EN
                       </option>
                       {countries.map((country) => (
-                        <option
-                          key={country}
-                          value={country}
-                          className="bg-white border-none"
-                        >
+                        <option key={country} value={country} className="bg-white border-none">
                           {country}
                         </option>
                       ))}
                     </select>
-                    {selectedCountry && (
-                      <div className="mt-4">
-                        <p className=""></p>
-                      </div>
-                    )}
                   </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <Transition
-          show={isMenuOpen}
-          enter="transition ease-out duration-100 transform"
-          enterFrom="opacity-0 scale-95"
-          enterTo="opacity-100 scale-100"
-          leave="transition ease-in duration-75 transform"
-          leaveFrom="opacity-100 scale-100"
-          leaveTo="opacity-0 scale-95"
-        >
-          {(ref) => (
-            <motion.div
-              ref={ref}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="sm:hidden" id="mobile-menu"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <Link
-                  to="/"
-                  className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Overview
-                </Link>
-                <Link
-                  to="/Discover"
-                  className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Meetups
-                </Link>
-                <Link
-                  to="/help"
-                  className="text-zinc-900 block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Help
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </Transition>
       </motion.nav>
 
       {isSignInOpen && (
@@ -208,7 +127,7 @@ const Navbar = () => {
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50"
         >
-          <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-lg">
+            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-lg">
             <div className="bg-gray-100 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">

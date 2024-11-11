@@ -3,9 +3,11 @@ import { IoClose } from "react-icons/io5";
 import { motion } from "framer-motion";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { FcGoogle } from "react-icons/fc";
+import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0
 
 const Home = () => {
-
+  const { loginWithRedirect } = useAuth0(); // Initialize Auth0 login
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -91,7 +93,7 @@ const Home = () => {
                                 Mobile No:
                               </label>
                               <PhoneInput
-                                country={"ng"} // Default country Nigeria
+                                country={"ng"}
                                 value={formData.mobile}
                                 onChange={handlePhoneChange}
                                 inputProps={{
@@ -101,7 +103,7 @@ const Home = () => {
                                   className:
                                     "mt-1 block w-full px-12 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
                                 }}
-                                onlyCountries={["za", "ss", "sd"]}
+                                onlyCountries={["za", "ss", "sd", "in"]}
                               />
                             </div>
                           </div>
@@ -142,6 +144,14 @@ const Home = () => {
                             </div>
                           </div>
                           <div className="flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => loginWithRedirect()} // Add Auth0 login here
+                              className="mt-3 w-full md:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 sm:mt-0
+                              sm:ml-3 sm:w-auto sm:text-sm"
+                            >
+                              Join with Google <FcGoogle className='m-1'/>
+                            </button>
                             <button
                               type="submit"
                               className="mt-3 w-full md:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#bb63ff] text-base font-medium text-white hover:bg-zinc-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"

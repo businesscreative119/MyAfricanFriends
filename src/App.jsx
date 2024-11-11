@@ -16,6 +16,7 @@ import SecurityPage from "./components/SecurityPage";
 import Terms from "./components/Terms";
 import UserDetail from "./components/UserDetail";
 
+
 function App() {
 
   
@@ -138,6 +139,7 @@ function App() {
         </>
       ),
     }
+    
   ]);
 
   return <RouterProvider router={router} />;
